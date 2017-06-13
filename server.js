@@ -1,8 +1,11 @@
 var express = require('express');
 var app = express();
 
+var pageSize = 2;
+
 // Load databases
 var games = require('./.data/games.json');
+var gamesArray = [];
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
@@ -15,11 +18,24 @@ app.get("/", function (request, response) {
   response.sendFile(__dirname + '/views/index.html');
 });
 
-// Simple in-memory store for now
+ //split list into groups
+while (games.length > 0) {
+    gamesArray.push(games.splice(0, pageSize));
+}
 
 // Start API endpoints
 app.get("/games", function (request, response) {
-  response.send(games);
+  //set current page if specifed as get variable (eg: /?page=2)
+  var currentPage = 1;
+  if (typeof request.query.page !== 'undefined') {
+      currentPage = +request.query.page;
+  }
+  //show list of students from group
+  var gamesList = gamesArray[+currentPage - 1];
+  response.send({
+    count: games.length,
+    results: gamesList
+  });
 });
 
 app.get("/games/:gameId", function(request, response) {
