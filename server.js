@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 
-var pageSize = 2;
+var pageSize = 10;
 
 // Load database
 var gamesData = require('./.data/games.json');
