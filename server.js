@@ -3,9 +3,14 @@ var app = express();
 
 var pageSize = 2;
 
-// Load databases
+// Load database
 var games = require('./.data/games.json');
 var gamesArray = [];
+//split games list into pages
+var gamesTemp = games.slice(0);
+while (gamesTemp.length > 0) {
+    gamesArray.push(gamesTemp.splice(0, pageSize));
+}
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
@@ -18,13 +23,12 @@ app.get("/", function (request, response) {
   response.sendFile(__dirname + '/views/index.html');
 });
 
- //split list into groups
-for (var gamesIndex = 0; gamesIndex < games.length; gamesIndex++) {
-  gamesArray.push(games[gamesIndex]);
-}
-
 // Start API endpoints
 app.get("/games", function (request, response) {
+  response.send(returnPaginated(games, request));
+});
+
+function returnPaginated(data, request) {
   //set current page if specifed as get variable (eg: /?page=2)
   var currentPage = 1;
   if (typeof request.query.page !== 'undefined') {
@@ -32,28 +36,20 @@ app.get("/games", function (request, response) {
   }
   //show list of students from group
   var gamesList = gamesArray[currentPage - 1];
-  response.send({
+  return {
     count: games.length,
     next: currentPage === gamesList.length ? null : currentURL(request) + '?page=' + (currentPage + 1),
     previous: currentPage === 1 ? null : currentURL(request) + '?page=' + (currentPage - 1),
     results: gamesList
-  });
-});
+  };
+}
 
 app.get("/games/:gameId", function(request, response) {
   var payload = games[request.params.gameId];
   payload.url = currentURL(request);
   response.send(games[request.params.gameId]);
 });
-  
+
 function currentURL(request) {
-  console.log(request);
-  return request.protocol + '://' + request.get('host') + request.url;
+  return request.protocol + '://' + request.get('host') + request.route.path;
 }
-
-// could also use the POST body instead of query string: http://expressjs.com/en/api.html#req.body
-/*app.post("/dreams", function (request, response) {
-  dreams.push(request.query.dream);
-  response.sendStatus(200);
-});*/
-
