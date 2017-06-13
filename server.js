@@ -19,6 +19,9 @@ var dreams = [
   "Wash the dishes"
 ];
 
+var config = require('./.data/games.json');
+console.log(config);
+
 // Start API endpoints
 app.get("/dreams", function (request, response) {
   response.send(dreams);
