@@ -7,7 +7,7 @@
 $(function() {
   console.log('hello world :o');
   
-  $.get('/dreams', function(dreams) {
+  /*$.get('/dreams', function(dreams) {
     dreams.forEach(function(dream) {
       $('<li></li>').text(dream).appendTo('ul#dreams');
     });
@@ -21,6 +21,6 @@ $(function() {
       $('input').val('');
       $('input').focus();
     });
-  });
+  });*/
 
 });
