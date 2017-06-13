@@ -19,8 +19,8 @@ app.get("/", function (request, response) {
 });
 
  //split list into groups
-while (games.length > 0) {
-    gamesArray.push(games.splice(0, pageSize));
+for (var gamesIndex = 0; gamesIndex < games.length; gamesIndex++) {
+  gamesArray.push(games[gamesIndex]);
 }
 
 // Start API endpoints
@@ -34,13 +34,21 @@ app.get("/games", function (request, response) {
   var gamesList = gamesArray[+currentPage - 1];
   response.send({
     count: games.length,
-    results: gamesList
+    results: gamesList,
+    previous: currentPage === 1 ? null : currentPage < gamesArray.length ? request.protocol + '://' + request.get('host') + request.originalUrl + '?page=' + (currentPage + 1)
+    url: 
   });
 });
 
 app.get("/games/:gameId", function(request, response) {
+  var payload = games[request.params.gameId];
+  payload.url = currentURL(request);
   response.send(games[request.params.gameId]);
 });
+  
+function currentURL(request) {
+  return request.protocol + '://' + request.get('host') + request.originalUrl;
+}
 
 // could also use the POST body instead of query string: http://expressjs.com/en/api.html#req.body
 /*app.post("/dreams", function (request, response) {
