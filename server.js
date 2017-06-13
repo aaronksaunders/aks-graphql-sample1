@@ -22,6 +22,10 @@ app.get("/games", function (request, response) {
   response.send(games);
 });
 
+app.get("/games/:gameId", function(request, response) {
+  response.send(games[request.params.gameId]);
+});
+
 // could also use the POST body instead of query string: http://expressjs.com/en/api.html#req.body
 /*app.post("/dreams", function (request, response) {
   dreams.push(request.query.dream);
