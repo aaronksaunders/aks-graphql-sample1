@@ -27,38 +27,46 @@ app.get("/", function (request, response) {
   response.sendFile(__dirname + '/views/index.html');
 });
 
+
+
 // Start API endpoints
 app.get("/games", function (request, response) {
   response.send(returnPaginated(games, request));
 });
-
 app.get("/games/:gameId", function(request, response) {
   response.send(returnDetail(gamesData, request));
 });
 
-function clone(obj) {
-  return JSON.parse(JSON.stringify(obj));
-}
+
 
 function returnDetail(data, request) {
   var param = request.params[request.route.path.split(':')[1]];
-  var item = clone(data[parseInt(param)]);
+  var item = clone(data[parseInt(param) - 1]);
   item.url = currentURL(request);
   return item;
 }
 
 function returnPaginated(data, request) {
-  //set current page if specifed as get variable (eg: /?page=2)
   var currentPage = 1;
   if (typeof request.query.page !== 'undefined') {
       currentPage = parseInt(request.query.page);
+  }
+  var items = clone(data.paginated[currentPage - 1]);
+  for (var i = 0; i < items.length; i++) {
+    items[i].url = currentURL(request) + '/' + (((currentPage - 1) * pageSize) + i + 1);
   }
   return {
     count: data.count,
     next: currentPage === data.paginated.length ? null : currentURL(request) + '?page=' + (currentPage + 1),
     previous: currentPage === 1 ? null : currentURL(request) + '?page=' + (currentPage - 1),
-    results: data.paginated[currentPage - 1]
+    results: items
   };
+}
+
+
+
+function clone(obj) {
+  return JSON.parse(JSON.stringify(obj));
 }
 
 function currentURL(request) {
