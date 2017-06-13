@@ -1,6 +1,9 @@
 var express = require('express');
 var app = express();
 
+// Load databases
+var games = require('./.data/games.json');
+
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
@@ -13,18 +16,10 @@ app.get("/", function (request, response) {
 });
 
 // Simple in-memory store for now
-var dreams = [
-  "Find and count some sheep",
-  "Climb a really tall mountain",
-  "Wash the dishes"
-];
-
-var config = require('./.data/games.json');
-console.log(config);
 
 // Start API endpoints
-app.get("/dreams", function (request, response) {
-  response.send(dreams);
+app.get("/games", function (request, response) {
+  response.send(games);
 });
 
 // could also use the POST body instead of query string: http://expressjs.com/en/api.html#req.body
