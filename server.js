@@ -31,12 +31,12 @@ app.get("/games", function (request, response) {
       currentPage = +request.query.page;
   }
   //show list of students from group
-  var gamesList = gamesArray[+currentPage - 1];
+  var gamesList = gamesArray[currentPage - 1];
   response.send({
     count: games.length,
-    results: gamesList,
-    previous: currentPage === 1 ? null : currentPage < gamesArray.length ? request.protocol + '://' + request.get('host') + request.originalUrl + '?page=' + (currentPage + 1)
-    url: 
+    next: currentPage === gamesList.length ? null : currentURL(request) + '?page=' + (currentPage + 1),
+    previous: currentPage === 1 ? null : currentURL(request) + '?page=' + (currentPage - 1),
+    results: gamesList
   });
 });
 
@@ -47,7 +47,8 @@ app.get("/games/:gameId", function(request, response) {
 });
   
 function currentURL(request) {
-  return request.protocol + '://' + request.get('host') + request.originalUrl;
+  console.log(request);
+  return request.protocol + '://' + request.get('host') + request.url;
 }
 
 // could also use the POST body instead of query string: http://expressjs.com/en/api.html#req.body
