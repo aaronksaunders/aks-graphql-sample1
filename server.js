@@ -7,7 +7,7 @@ var pageSize = 2;
 var gamesData = require('./.data/games.json');
 var gamesArray = [];
 //split games list into pages
-var gamesTemp = gamesData.slice(0);
+var gamesTemp = gamesData.slice();
 while (gamesTemp.length > 0) {
     gamesArray.push(gamesTemp.splice(0, pageSize));
 }
@@ -33,11 +33,19 @@ app.get("/games", function (request, response) {
 });
 
 app.get("/games/:gameId", function(request, response) {
-  var payload = gamesData.slice(parseInt(request.params.gameId));
-  console.log(gamesData.slice(0));
-  //payload.url = currentURL(request);
-  response.send(payload);
+  response.send(returnDetail(gamesData, request));
 });
+
+function clone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
+function returnDetail(data, request) {
+  var param = request.params[request.route.path.split(':')[1]];
+  var item = clone(data[parseInt(param)]);
+  item.url = currentURL(request);
+  return item;
+}
 
 function returnPaginated(data, request) {
   //set current page if specifed as get variable (eg: /?page=2)
