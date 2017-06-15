@@ -4,7 +4,7 @@ var app = express();
 var pageSize = 10;
 
 // Load database
-var gamesData = require('./.data/games.json');
+var gamesData = require('./games.json');
 var gamesArray = [];
 //split games list into pages
 var gamesTemp = gamesData.slice();
