@@ -8,13 +8,13 @@ $(function() {
   console.log('hello world :o');
   
   $.get('games', function(result) {
-    $('#result').text(JSON.stringify(result));
+    $('#result').text(JSON.stringify(result, undefined, 4));
   });
  
   $('form').submit(function(event) {
     event.preventDefault();
     $.get($('input').val() || 'games', function(result) {
-      $('#result').text(JSON.stringify(result));
+      $('#result').text(JSON.stringify(result, undefined, 4));
     });
   });
 
