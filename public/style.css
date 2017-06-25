@@ -6,7 +6,19 @@ body {
   background-color: black;
   color: white;
   font-family: "Helvetica Neue", helvetica, arial, sans-serif;
-  margin: 25px;
+  margin: 5%;
+}
+
+.left, .right {
+  float: left;
+  width: 50%;
+}
+
+@media (max-width: 800px) {
+  .left, .right {
+    float: none;
+    width: 100%;
+  }
 }
 
 h1 {
@@ -20,6 +32,7 @@ section {
 
 ul {
   list-style: none;
+  padding-left: 25px;
 }
 
 li {
@@ -52,6 +65,10 @@ li:after {
   border-top: 12px solid black;
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
+}
+
+label {
+  padding-right: 5px;
 }
 
 #result {
