@@ -14,7 +14,7 @@ body {
   width: 50%;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 1024px) {
   .left, .right {
     float: none;
     width: 100%;
@@ -38,7 +38,6 @@ ul {
 li {
   position: relative;
   line-height: 2em;
-  font-weight: bold;
 }
 
 li:before {
