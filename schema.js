@@ -69,7 +69,7 @@ const resolvers = {
       const filteredList = gamesData.filter(game =>
         game.title.includes(args.search || '')
       )
-      return connectionFromArray(filteredList, args)
+      return Object.assign({}, { totalCount: gamesData.length }, connectionFromArray(filteredList, args))
     }
   }
 }
