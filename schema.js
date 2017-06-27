@@ -1,4 +1,5 @@
 const humps = require('humps')
+const { connectionFromArray } = require('graphql-relay')
 const graphQLTools = require('graphql-tools')
 const rawData = require('./games.json')
 
@@ -40,7 +41,8 @@ type Query {
     after: String
     before: String
     first: Int
-    last: Int
+    last: Int,
+    search: String
   ): GameConnection!
   
   # Unpaginated Games
@@ -53,12 +55,14 @@ schema {
 `;
 
 const resolvers = {
+  // we should really make id unique across the board here but ¯\_(ツ)_/¯
   Query: {
     game(_, { id }) {
       return Object.assign({}, { id }, gamesData[id]) // gimme spread :(
     },
-    allGames () {
-      return gamesData.map((game, id) => Object.assign({}, game, { id }))
+    allGames (_, args) {
+      const filteredList = gamesData.filter(game => game.name.includes(args.search || ''))
+      return connectionFromArray(filteredList, args)
     }
   }
 }
