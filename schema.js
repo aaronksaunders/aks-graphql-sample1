@@ -5,7 +5,7 @@ const rawData = require('./games.json')
 
 const gamesData = humps // :( pipeline operator plixplox?
   .camelizeKeys(rawData)
-  .map((game, id) => Object.assign({}, game, { id }))
+  .map((game, id) => Object.assign({}, game, { id })) // gimme spread :(
 
 const typeDefs = `
 type PageInfo {
