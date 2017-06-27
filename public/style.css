@@ -29,6 +29,17 @@ a {
   color: white;
 }
 
+.glitch-button {
+  background: white;
+  display: inline-block;
+  padding: 1px;
+  border-radius: 5px;
+}
+
+.glitch-remix img {
+  display: block;
+}
+
 section {
   margin-top: 10px;
   font-size: 12px;
