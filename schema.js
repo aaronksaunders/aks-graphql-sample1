@@ -1,18 +1,50 @@
+const humps = require('humps')
 const graphQLTools = require('graphql-tools')
-const gamesData = require('./games.json')
+const rawData = require('./games.json')
+
+const gamesData = humps.camelizeKeys(rawData)
 
 const typeDefs = `
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
 # Zelda Game
 type Game {
   id: ID! # Can't have a db without ids c'mon
   title: String! # The game title
-  releaseDate: String # When was the game released (ISO Date)
+  releaseDate: String # When was the game released (yyyy-mm-dd)
+}
+
+type GameEdge {
+  cursor: String!
+  node: Game
+}
+
+type GameConnection {
+  edges: [GameEdge!]
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 # the schema allows the following query:
 type Query {
   # Game Info
   game(id: ID!): Game
+
+  # Paginated Games
+  games (
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): GameConnection!
+  
+  # Unpaginated Games
+  allGames: [Game]
 }
 
 schema {
@@ -22,9 +54,11 @@ schema {
 
 const resolvers = {
   Query: {
-    game(args) {
-      console.log(args)
-      return Object.assign({}, { id: 3 }, gamesData[3])
+    game(_, { id }) {
+      return Object.assign({}, { id }, gamesData[id]) // gimme spread :(
+    },
+    allGames () {
+      return gamesData.map((game, id) => Object.assign({}, game, { id }))
     }
   }
 }
