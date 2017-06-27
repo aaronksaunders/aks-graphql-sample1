@@ -3,7 +3,9 @@ const { connectionFromArray } = require('graphql-relay')
 const graphQLTools = require('graphql-tools')
 const rawData = require('./games.json')
 
-const gamesData = humps.camelizeKeys(rawData)
+const gamesData = humps // :( pipeline operator plixplox?
+  .camelizeKeys(rawData)
+  .map((game, id) => Object.assign({}, game, { id }))
 
 const typeDefs = `
 type PageInfo {
@@ -44,7 +46,7 @@ type Query {
     last: Int,
     search: String
   ): GameConnection!
-  
+
   # Unpaginated Games
   allGames: [Game]
 }
@@ -52,16 +54,21 @@ type Query {
 schema {
   query: Query
 }
-`;
+`
 
 const resolvers = {
   // we should really make id unique across the board here but ¯\_(ツ)_/¯
   Query: {
     game(_, { id }) {
-      return Object.assign({}, { id }, gamesData[id]) // gimme spread :(
+      return gamesData[id]
     },
-    allGames (_, args) {
-      const filteredList = gamesData.filter(game => game.name.includes(args.search || ''))
+    allGames () {
+      return gamesData
+    },
+    games (_, args) {
+      const filteredList = gamesData.filter(game =>
+        game.title.includes(args.search || '')
+      )
       return connectionFromArray(filteredList, args)
     }
   }
