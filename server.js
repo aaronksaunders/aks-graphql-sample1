@@ -1,8 +1,7 @@
 const express = require('express')
+const graphqlHTTP = require('express-graphql')
+const graphqlSchema = require('./schema')
 const app = express()
-// Load database
-const gamesData = require('./games.json')
-
 
 // listen for requests :)
 const listener = app.listen(process.env.PORT, function () {
@@ -10,7 +9,7 @@ const listener = app.listen(process.env.PORT, function () {
 });
 
 // Serve info page
-app.get('/', graphqlHTTP({
-  schema: MyGraphQLSchema,
+app.use('/', graphqlHTTP({
+  schema: graphqlSchema,
   graphiql: true
 }))

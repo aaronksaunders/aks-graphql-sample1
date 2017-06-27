@@ -1,4 +1,5 @@
-const graphQLTools = require('graphql-tools').
+const graphQLTools = require('graphql-tools')
+const gamesData = require('./games.json')
 
 const typeDefs = `
 # Zelda Game
@@ -14,19 +15,23 @@ type Query {
   game(id: ID!): Game
 }
 
-# we need to tell the server which types represent the root query
-# and root mutation types. We call them RootQuery and RootMutation by convention.
 schema {
   query: Query
-  mutation: Mutation
 }
 `;
 
 const resolvers = {
-  
+  Query: {
+    game(args) {
+      console.log(args)
+      return Object.assign({}, { id: 3 }, gamesData[3])
+    }
+  }
 }
 
-export default graphQLTools.makeExecutableSchema({
+module.exports = graphQLTools.makeExecutableSchema({
   typeDefs,
   resolvers,
+  allowUndefinedInResolve: false,
+  logger: console
 })
