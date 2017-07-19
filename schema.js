@@ -57,9 +57,9 @@ const typeDefs = `
   }
 
   # the schema allows the following query:
-type Mutation {
-  addDream(first_name:String, last_name :String, email : String) : Dream
-}
+  type Mutation {
+    addDream(first_name:String, last_name :String, email : String) : Dream
+  }
 
   type Query {
     # Game Info
@@ -93,7 +93,7 @@ type Mutation {
 
   schema {
     query: Query
-mutation : Mutation
+    mutation : Mutation
   }
 `;
 
@@ -106,6 +106,8 @@ const resolvers = {
           "Content-Type": "application/json"
         },
         body: JSON.stringify(args)
+      }).then(_result => {
+        return _result.json();
       });
     }
   },
