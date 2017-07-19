@@ -57,6 +57,10 @@ const typeDefs = `
   }
 
   # the schema allows the following query:
+type Mutation {
+  addDream(first_name:String, last_name :String, email : String) : Dream
+}
+
   type Query {
     # Game Info
     game(id: ID!): Game
@@ -89,10 +93,22 @@ const typeDefs = `
 
   schema {
     query: Query
+mutation : Mutation
   }
 `;
 
 const resolvers = {
+  Mutation: {
+    addDream(_, args) {
+      return fetch("https://aks-json-db.glitch.me/dreams/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(args)
+      });
+    }
+  },
   // we should really make id unique across the board here but ¯\_(ツ)_/¯
   Query: {
     dreams(_, args) {
@@ -109,10 +125,9 @@ const resolvers = {
         });
     },
     dream(_, { id }) {
-      return fetch(`https://aks-json-db.glitch.me/dreams/${id}`)
-        .then(res => {
-          return res.json();
-        });
+      return fetch(`https://aks-json-db.glitch.me/dreams/${id}`).then(res => {
+        return res.json();
+      });
     },
     game(_, { id }) {
       return gamesData[id];
