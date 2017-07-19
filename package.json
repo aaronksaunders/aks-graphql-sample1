@@ -15,7 +15,9 @@
     "graphql": "^0.10.5",
     "graphql-tools": "^1.1.0",
     "graphql-relay": "^0.5.2",
-    "humps": "2.0.1"
+    "humps": "2.0.1",
+    "isomorphic-fetch": "^2.2.1",
+    "es6-promise": "^4.1.1"
   },
   "engines": {
     "node": "8.x"

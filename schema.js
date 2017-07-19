@@ -3,6 +3,9 @@ const { connectionFromArray } = require("graphql-relay");
 const graphQLTools = require("graphql-tools");
 const rawData = require("./games.json");
 
+require("es6-promise").polyfill();
+require("isomorphic-fetch");
+
 const gamesData = humps // :( pipeline operator plixplox?
   .camelizeKeys(rawData)
   .map((game, id) => Object.assign({}, game, { id })); // gimme spread :(
@@ -23,7 +26,7 @@ const typeDefs = `
   }
 
   type GameEdge {
-    id: ID! 
+    cursor: String!
     node: Game
   }
 
@@ -34,14 +37,16 @@ const typeDefs = `
   }
 
   type Dream {
-    cursor: String!
-    node: Game
+    id: ID!
+    first_name: String!
+    last_name: String!
+    email : String!
   }
 
 
   type DreamEdge {
     cursor: String!
-    node: Game
+    node: Dream
   }
 
 
@@ -68,14 +73,18 @@ const typeDefs = `
     # Unpaginated Games
     allGames: [Game]
 
+
+    # Game Info
+    dream(id: ID!): Dream
+
     # Paginated Dreams
-    games (
+    dreams (
       after: String
       before: String
       first: Int
       last: Int,
       search: String
-    ): GameConnection!
+    ): DreamConnection!
   }
 
   schema {
@@ -86,8 +95,8 @@ const typeDefs = `
 const resolvers = {
   // we should really make id unique across the board here but ¯\_(ツ)_/¯
   Query: {
-    allDreams(_, args) {
-      return fetch('https://aks-json-db.glitch.me/dreams')
+    dreams(_, args) {
+      return fetch("https://aks-json-db.glitch.me/dreams")
         .then(res => {
           return res.json();
         })
@@ -97,6 +106,12 @@ const resolvers = {
             { totalCount: j.length },
             connectionFromArray(j, args)
           );
+        });
+    },
+    dream(_, { id }) {
+      return fetch(`https://aks-json-db.glitch.me/dreams/${id}`)
+        .then(res => {
+          return res.json();
         });
     },
     game(_, { id }) {
