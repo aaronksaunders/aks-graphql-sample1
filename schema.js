@@ -18,20 +18,18 @@ const typeDefs = `
     startCursor: String
   }
 
-  # Zelda Game
-  type Game {
-    id: ID! # Can't have a db without ids c'mon
-    title: String! # The game title
-    releaseDate: String # When was the game released (yyyy-mm-dd)
+  type Company {
+    id: ID! 
+    name: String!
   }
 
-  type GameEdge {
+  type CompanyEdge {
     cursor: String!
-    node: Game
+    node: Company
   }
 
-  type GameConnection {
-    edges: [GameEdge!]
+  type CompanyConnection {
+    edges: [CompanyEdge!]
     pageInfo: PageInfo!
     totalCount: Int!
   }
@@ -41,6 +39,7 @@ const typeDefs = `
     first_name: String!
     last_name: String!
     email : String!
+    company : Company
   }
 
 
@@ -62,23 +61,23 @@ const typeDefs = `
   }
 
   type Query {
-    # Game Info
-    game(id: ID!): Game
+    # Company Info
+    company(id: ID!): Company
 
     # Paginated Games
-    games (
+    companies (
       after: String
       before: String
       first: Int
       last: Int,
       search: String
-    ): GameConnection!
+    ): CompanyConnection!
 
-    # Unpaginated Games
-    allGames: [Game]
+    # Unpaginated Company
+    allCompanies: [Company]
 
 
-    # Game Info
+    # Dream Info
     dream(id: ID!): Dream
 
     # Paginated Dreams
@@ -131,21 +130,31 @@ const resolvers = {
         return res.json();
       });
     },
-    game(_, { id }) {
-      return gamesData[id];
+    //
+    //
+    //
+    company(_, { id }) {
+      return fetch(
+        `https://aks-json-db.glitch.me/companies/${id}`
+      ).then(res => {
+        return res.json();
+      });
     },
-    allGames() {
-      return gamesData;
+    allCompanies() {
+      // return gamesData;
     },
-    games(_, args) {
-      const filteredList = gamesData.filter(game =>
-        game.title.includes(args.search || "")
-      );
-      return Object.assign(
-        {},
-        { totalCount: filteredList.length },
-        connectionFromArray(filteredList, args)
-      );
+    companies(_, args) {
+      return fetch("https://aks-json-db.glitch.me/companies")
+        .then(res => {
+          return res.json();
+        })
+        .then(j => {
+          return Object.assign(
+            {},
+            { totalCount: j.length },
+            connectionFromArray(j, args)
+          );
+        });
     }
   }
 };
