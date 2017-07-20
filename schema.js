@@ -34,24 +34,12 @@ const typeDefs = `
     totalCount: Int!
   }
 
-
-  type UserCompanyConnection {
-    edges: [UserCompanyEdge!]
-    pageInfo: PageInfo!
-    totalCount: Int!
-  }
-
-  type UserCompanyEdge {
-    cursor: String!
-    node: User
-  }
-
   type User {
     id: ID!
     first_name: String!
     last_name: String!
     email : String!
-    companiesConnection(
+    companyConnection(
       first: Int,
       after: String,
       last: Int,
@@ -82,7 +70,7 @@ const typeDefs = `
     company(id: ID!): Company
 
     # Paginated Games
-    company (
+    companies (
       after: String
       before: String
       first: Int
