@@ -66,15 +66,8 @@ const typeDefs = `
     # Company Info
     company(id: ID!): Company
 
-    companys (
-      after: String
-      before: String
-      first: Int
-      last: Int,
-      search: String
-    ): CompanyConnection!
 
-companies (
+    companies (
       after: String
       before: String
       first: Int
@@ -172,23 +165,11 @@ const resolvers = {
           );
         });
     },
-    companys(_, args) {
-      return fetch("https://aks-json-db.glitch.me/companies")
-        .then(res => {
-          return res.json();
-        })
-        .then(j => {
-          return Object.assign(
-            {},
-            { totalCount: j.length },
-            connectionFromArray(j, args)
-          );
-        });
-    }
+
   },
   Company: {
-    users(_, args) {
-      return fetch("https://aks-json-db.glitch.me/dreams")
+    users(obj, args) {
+      return fetch(`https://aks-json-db.glitch.me/dreams/?companyId=${obj.id}`)
         .then(res => {
           return res.json();
         })
