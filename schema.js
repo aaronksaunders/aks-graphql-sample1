@@ -29,6 +29,12 @@ const typeDefs = `
   }
 
   type CompanyConnection {
+    edge: CompanyEdge!
+    pageInfo: PageInfo!
+    totalCount: Int!
+  }
+
+  type CompaniesConnection {
     edges: [CompanyEdge!]
     pageInfo: PageInfo!
     totalCount: Int!
@@ -39,12 +45,7 @@ const typeDefs = `
     first_name: String!
     last_name: String!
     email : String!
-    companyConnection(
-      first: Int,
-      after: String,
-      last: Int,
-      before: String
-    ): UserCompanyConnection
+    company : CompanyConnection
   }
 
 
@@ -69,6 +70,23 @@ const typeDefs = `
     # Company Info
     company(id: ID!): Company
 
+
+    company (
+      after: String
+      before: String
+      first: Int
+      last: Int,
+      search: String
+    ): CompanyConnection!
+
+    companies (
+      after: String
+      before: String
+      first: Int
+      last: Int,
+      search: String
+    ): CompaniesConnection!
+
     # Paginated Games
     companies (
       after: String
@@ -76,7 +94,7 @@ const typeDefs = `
       first: Int
       last: Int,
       search: String
-    ): CompanyConnection!
+    ): CompaniesConnection!
 
     # Unpaginated Company
     allCompanies: [Company]
