@@ -21,7 +21,7 @@ const typeDefs = `
   type Company {
     id: ID! 
     name: String!
-    users: [User!]! 
+    users(status: String = "any", after: String, first: Int, before: String, last: Int): UserConnection
   }
 
   type CompanyEdge {
@@ -52,7 +52,7 @@ const typeDefs = `
 
 
   type UserConnection {
-    edges: [UserEdge!]
+    edges: [UserEdge]
     pageInfo: PageInfo!
     totalCount: Int!
   }
@@ -67,6 +67,14 @@ const typeDefs = `
     company(id: ID!): Company
 
     companys (
+      after: String
+      before: String
+      first: Int
+      last: Int,
+      search: String
+    ): CompanyConnection!
+
+companies (
       after: String
       before: String
       first: Int
@@ -146,12 +154,11 @@ const resolvers = {
         });
     },
     allCompanies() {
-      return fetch("https://aks-json-db.glitch.me/companies")
-        .then(res => {
-          return res.json();
-        })
+      return fetch("https://aks-json-db.glitch.me/companies").then(res => {
+        return res.json();
+      });
     },
-        companies(_, args) {
+    companies(_, args) {
       return fetch("https://aks-json-db.glitch.me/companies")
         .then(res => {
           return res.json();
