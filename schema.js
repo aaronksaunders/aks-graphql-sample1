@@ -41,7 +41,7 @@ const typeDefs = `
     first_name: String!
     last_name: String!
     email : String!
-    company: Company @relation(name: "CompanyOnUser")
+    companyId: Company @relation(name: "CompanyOnUser")
   }
 
 
@@ -64,24 +64,16 @@ const typeDefs = `
 
   type Query {
     # Company Info
-    Company(id: ID!): Company
+    company(id: ID!): Company
 
-    companies (
+    companys (
       after: String
       before: String
       first: Int
       last: Int,
       search: String
-    ): CompaniesConnection!
+    ): CompanyConnection!
 
-    # Paginated Games
-    companies (
-      after: String
-      before: String
-      first: Int
-      last: Int,
-      search: String
-    ): CompaniesConnection!
 
     # Unpaginated Company
     allCompanies: [Company]
@@ -143,17 +135,23 @@ const resolvers = {
     //
     //
     //
-    Company(_, { id }) {
-      return fetch(
-        `https://aks-json-db.glitch.me/companies/${id}`
-      ).then(res => {
-        return res.json();
-      });
+    company(_, { id }) {
+      console.log("company id", id);
+      return fetch(`https://aks-json-db.glitch.me/companies/${id}`)
+        .then(res => {
+          return res.json();
+        })
+        .catch(e => {
+          console.log(e);
+        });
     },
     allCompanies() {
-      // return gamesData;
+      return fetch("https://aks-json-db.glitch.me/companies")
+        .then(res => {
+          return res.json();
+        })
     },
-    companies(_, args) {
+    companys(_, args) {
       return fetch("https://aks-json-db.glitch.me/companies")
         .then(res => {
           return res.json();
