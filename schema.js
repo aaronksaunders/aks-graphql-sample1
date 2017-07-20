@@ -21,7 +21,7 @@ const typeDefs = `
   type Company {
     id: ID! 
     name: String!
-users : [Company]
+    users: [User!]! @relation(name: "CompanyOnUser")
   }
 
   type CompanyEdge {
@@ -30,23 +30,18 @@ users : [Company]
   }
 
   type CompanyConnection {
-    edge: CompanyEdge!
+    edge: [CompanyEdge]
     pageInfo: PageInfo!
     totalCount: Int!
   }
 
-  type CompaniesConnection {
-    edges: [CompanyEdge!]
-    pageInfo: PageInfo!
-    totalCount: Int!
-  }
 
   type User {
     id: ID!
     first_name: String!
     last_name: String!
     email : String!
-    company : CompanyConnection
+    company: Company @relation(name: "CompanyOnUser")
   }
 
 
