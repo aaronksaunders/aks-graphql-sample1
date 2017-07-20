@@ -12,9 +12,13 @@ const typeDefs = `
     startCursor: String
   }
 
+  # company object used in app
   type Company {
+    # company object used in app
     id: ID! 
+    # company object used in app
     name: String!
+    # list of users that are associated with this company
     users(status: String = "any", after: String, first: Int, before: String, last: Int): UserConnection
   }
 
@@ -113,7 +117,7 @@ const resolvers = {
   // we should really make id unique across the board here but ¯\_(ツ)_/¯
   Query: {
     users(_, args) {
-      return fetch("https://aks-json-db.glitch.me/dreams")
+      return fetch("https://aks-json-db.glitch.me/users")
         .then(res => {
           return res.json();
         })
@@ -126,12 +130,12 @@ const resolvers = {
         });
     },
     user(_, { id }) {
-      return fetch(`https://aks-json-db.glitch.me/dreams/${id}`).then(res => {
+      return fetch(`https://aks-json-db.glitch.me/users/${id}`).then(res => {
         return res.json();
       });
     },
     allUsers(_, { id }) {
-      return fetch(`https://aks-json-db.glitch.me/dreams/`).then(res => {
+      return fetch(`https://aks-json-db.glitch.me/users`).then(res => {
         return res.json();
       });
     },
@@ -170,7 +174,7 @@ const resolvers = {
   },
   Company: {
     users(obj, args) {
-      return fetch(`https://aks-json-db.glitch.me/dreams/?companyId=${obj.id}`)
+      return fetch(`https://aks-json-db.glitch.me/users/?companyId=${obj.id}`)
         .then(res => {
           return res.json();
         })
