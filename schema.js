@@ -68,16 +68,7 @@ const typeDefs = `
 
   type Query {
     # Company Info
-    company(id: ID!): Company
-
-
-    company (
-      after: String
-      before: String
-      first: Int
-      last: Int,
-      search: String
-    ): CompanyConnection!
+    Company(id: ID!): Company
 
     companies (
       after: String
@@ -156,7 +147,7 @@ const resolvers = {
     //
     //
     //
-    company(_, { id }) {
+    Company(_, { id }) {
       return fetch(
         `https://aks-json-db.glitch.me/companies/${id}`
       ).then(res => {
