@@ -41,7 +41,7 @@ const typeDefs = `
     first_name: String!
     last_name: String!
     email : String!
-    company: CompanyConnection
+    company: Company
   }
 
 
@@ -158,6 +158,7 @@ const resolvers = {
         return res.json();
       });
     },
+
     companies(_, args) {
       return fetch("https://aks-json-db.glitch.me/companies")
         .then(res => {
@@ -182,6 +183,33 @@ const resolvers = {
             { totalCount: j.length },
             connectionFromArray(j, args)
           );
+        });
+    }
+  },
+  Company: {
+    users(_, args) {
+      return fetch("https://aks-json-db.glitch.me/dreams")
+        .then(res => {
+          return res.json();
+        })
+        .then(j => {
+          return Object.assign(
+            {},
+            { totalCount: j.length },
+            connectionFromArray(j, args)
+          );
+        });
+    }
+  },
+  User: {
+    company({ companyId }) {
+      console.log("company id", companyId);
+      return fetch(`https://aks-json-db.glitch.me/companies/${companyId}`)
+        .then(res => {
+          return res.json();
+        })
+        .catch(e => {
+          console.log(e);
         });
     }
   }
