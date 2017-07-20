@@ -21,6 +21,7 @@ const typeDefs = `
   type Company {
     id: ID! 
     name: String!
+users : [Company]
   }
 
   type CompanyEdge {
