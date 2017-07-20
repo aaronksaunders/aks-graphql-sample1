@@ -1,27 +1,18 @@
-Welcome to the Glitch BETA
+GraphQL Sample Using json-server as data store
 =========================
 
-Click `Show` in the header to see your app live. Updates to your code will instantly deploy and update live.
-
-**Glitch** is the friendly commmunity where you'll build the app of your dreams. Glitch lets you instantly create, remix, edit, and host an app, bot or site, and you can invite collaborators or helpers to simultaneously edit code with you.
-
-Find out more [about Glitch](https://glitch.com/about).
 
 
 Your Project
 ------------
 
-On the front-end,
-- edit `public/client.js`, `public/style.css` and `views/index.html`
-- drag in `assets`, like images or music, to add them to your project
+We have two objects, User and Company, we show the relationship between the two. We also show how to use relay connections to page through the results of the queries
 
-On the back-end,
-- your app starts at `server.js`
-- add frameworks and packages in `package.json`
-- safely store app secrets in `.env` (nobody can see this but you and people you invite)
+The json-server is running also on a seperate instance of glitch since you cannot utilize multiple ports on one instance in glitch. See information here [https://glitch.com/edit/#!/lets-react-starter-json-server1?path=README.md:1:0](https://glitch.com/edit/#!/lets-react-starter-json-server1?path=README.md:1:0)
 
 
-Made by [Fog Creek](https://fogcreek.com/)
 -------------------
 
-\ ゜o゜)ノ
+Click `Show` in the header to see your app live. Updates to your code will instantly deploy and update live.
+
+Find out more [about Glitch](https://glitch.com/about).
