@@ -1,14 +1,8 @@
-const humps = require("humps");
 const { connectionFromArray } = require("graphql-relay");
 const graphQLTools = require("graphql-tools");
-const rawData = require("./games.json");
 
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
-
-const gamesData = humps // :( pipeline operator plixplox?
-  .camelizeKeys(rawData)
-  .map((game, id) => Object.assign({}, game, { id })); // gimme spread :(
 
 const typeDefs = `
   type PageInfo {
@@ -30,7 +24,7 @@ const typeDefs = `
   }
 
   type CompanyConnection {
-    edge: CompanyEdge
+    edges: [CompanyEdge]
     pageInfo: PageInfo!
     totalCount: Int!
   }
@@ -43,7 +37,6 @@ const typeDefs = `
     email : String!
     company: Company
   }
-
 
   type UserEdge {
     cursor: String!
@@ -65,7 +58,6 @@ const typeDefs = `
   type Query {
     # Company Info
     company(id: ID!): Company
-
 
     companies (
       after: String
@@ -91,6 +83,11 @@ const typeDefs = `
       last: Int,
       search: String
     ): UserConnection!
+
+
+    # Unpaginated Users
+    allUsers: [User]
+
   }
 
   schema {
@@ -133,6 +130,11 @@ const resolvers = {
         return res.json();
       });
     },
+    allUsers(_, { id }) {
+      return fetch(`https://aks-json-db.glitch.me/dreams/`).then(res => {
+        return res.json();
+      });
+    },
     //
     //
     //
@@ -164,8 +166,7 @@ const resolvers = {
             connectionFromArray(j, args)
           );
         });
-    },
-
+    }
   },
   Company: {
     users(obj, args) {
