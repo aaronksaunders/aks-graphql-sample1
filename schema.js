@@ -34,30 +34,47 @@ const typeDefs = `
     totalCount: Int!
   }
 
-  type Dream {
+
+  type UserCompanyConnection {
+    edges: [UserCompanyEdge!]
+    pageInfo: PageInfo!
+    totalCount: Int!
+  }
+
+  type UserCompanyEdge {
+    cursor: String!
+    node: User
+  }
+
+  type User {
     id: ID!
     first_name: String!
     last_name: String!
     email : String!
-    company : Company
+    companiesConnection(
+      first: Int,
+      after: String,
+      last: Int,
+      before: String
+    ): UserCompanyConnection
   }
 
 
-  type DreamEdge {
+  type UserEdge {
     cursor: String!
-    node: Dream
+    node: User
   }
 
 
-  type DreamConnection {
-    edges: [DreamEdge!]
+  type UserConnection {
+    edges: [UserEdge!]
     pageInfo: PageInfo!
     totalCount: Int!
   }
 
   # the schema allows the following query:
   type Mutation {
-    addDream(first_name:String, last_name :String, email : String) : Dream
+    addUser(first_name:String, last_name :String, email : String) : User
   }
 
   type Query {
@@ -65,7 +82,7 @@ const typeDefs = `
     company(id: ID!): Company
 
     # Paginated Games
-    companies (
+    company (
       after: String
       before: String
       first: Int
@@ -77,17 +94,17 @@ const typeDefs = `
     allCompanies: [Company]
 
 
-    # Dream Info
-    dream(id: ID!): Dream
+    # User Info
+    user(id: ID!): User
 
-    # Paginated Dreams
-    dreams (
+    # Paginated User
+    users (
       after: String
       before: String
       first: Int
       last: Int,
       search: String
-    ): DreamConnection!
+    ): UserConnection!
   }
 
   schema {
@@ -98,7 +115,7 @@ const typeDefs = `
 
 const resolvers = {
   Mutation: {
-    addDream(_, args) {
+    addUser(_, args) {
       return fetch("https://aks-json-db.glitch.me/dreams/", {
         method: "POST",
         headers: {
@@ -112,7 +129,7 @@ const resolvers = {
   },
   // we should really make id unique across the board here but ¯\_(ツ)_/¯
   Query: {
-    dreams(_, args) {
+    users(_, args) {
       return fetch("https://aks-json-db.glitch.me/dreams")
         .then(res => {
           return res.json();
@@ -125,7 +142,7 @@ const resolvers = {
           );
         });
     },
-    dream(_, { id }) {
+    user(_, { id }) {
       return fetch(`https://aks-json-db.glitch.me/dreams/${id}`).then(res => {
         return res.json();
       });
